@@ -1,11 +1,12 @@
+// path: config/database.ts
 import { parse } from "pg-connection-string";
 
 export default ({ env }) => {
-  const hasPg = !!env("DATABASE_URL");
+  const databaseUrl = env("DATABASE_URL");
 
-  if (hasPg) {
-    // Parse DATABASE_URL for Supabase/Postgres
-    const config = parse(env("DATABASE_URL"));
+  if (databaseUrl) {
+    // Parse Supabase/Postgres connection string
+    const config = parse(databaseUrl);
 
     return {
       connection: {
@@ -21,16 +22,12 @@ export default ({ env }) => {
             : false,
         },
         pool: { min: 2, max: 10 },
-        acquireConnectionTimeout: env.int(
-          "DATABASE_CONNECTION_TIMEOUT",
-          60000
-        ),
-        debug: false,
+        acquireConnectionTimeout: env.int("DATABASE_CONNECTION_TIMEOUT", 60000),
       },
     };
   }
 
-  // Local dev (SQLite)
+  // Local dev fallback (SQLite)
   return {
     connection: {
       client: "sqlite",
@@ -38,10 +35,7 @@ export default ({ env }) => {
         filename: env("DATABASE_FILENAME", ".tmp/data.db"),
       },
       useNullAsDefault: true,
-      acquireConnectionTimeout: env.int(
-        "DATABASE_CONNECTION_TIMEOUT",
-        60000
-      ),
+      acquireConnectionTimeout: env.int("DATABASE_CONNECTION_TIMEOUT", 60000),
     },
   };
 };
