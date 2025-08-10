@@ -7,7 +7,7 @@ export default [
     config: {
       origin: [
         'http://localhost:3000',                  // Local Next.js dev
-        'https://your-frontend.vercel.app',       // Vercel production frontend
+        'https://qr-code-lost-sms-system.vercel.app/',       // Vercel production frontend
       ],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
       headers: '*', // Allow all headers (you can restrict if needed)
