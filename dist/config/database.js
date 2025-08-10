@@ -1,31 +1,18 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-// path: config/database.ts
-exports.default = ({ env }) => {
-    const url = env('DATABASE_URL');
-    if (url) {
-        // Production: Supabase/Postgres via DATABASE_URL
-        return {
-            connection: {
-                client: 'postgres',
-                connection: {
-                    connectionString: url,
-                    ssl: env.bool('DATABASE_SSL', true) ? { rejectUnauthorized: false } : false,
-                },
-                pool: { min: 2, max: 10 },
-                acquireConnectionTimeout: env.int('DATABASE_CONNECTION_TIMEOUT', 60000),
-            },
-        };
-    }
-    // Local dev fallback: SQLite
-    return {
+// strapi-api/config/database.js
+module.exports = ({ env }) => ({
+    connection: {
+        client: 'postgres',
         connection: {
-            client: 'sqlite',
-            connection: {
-                filename: env('DATABASE_FILENAME', '.tmp/data.db'),
+            host: env('DATABASE_HOST'),
+            port: env.int('DATABASE_PORT', 5432),
+            database: env('DATABASE_NAME'),
+            user: env('DATABASE_USERNAME'),
+            password: env('DATABASE_PASSWORD'),
+            schema: env('DATABASE_SCHEMA', 'public'), // Not required
+            ssl: {
+                rejectUnauthorized: env.bool('DATABASE_SSL_SELF', false),
             },
-            useNullAsDefault: true,
-            acquireConnectionTimeout: env.int('DATABASE_CONNECTION_TIMEOUT', 60000),
         },
-    };
-};
+        debug: false,
+    },
+});
