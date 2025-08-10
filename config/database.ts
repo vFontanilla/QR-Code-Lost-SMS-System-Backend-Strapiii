@@ -1,18 +1,23 @@
 // path: config/database.ts
+import { parse } from 'pg-connection-string';
+
 export default ({ env }) => {
   const url = env('DATABASE_URL');
 
   if (url) {
-    // Production: Supabase/Postgres via DATABASE_URL
+    const cfg = parse(url);
     return {
       connection: {
         client: 'postgres',
         connection: {
-          connectionString: url,
-          ssl: env.bool('DATABASE_SSL', true) ? { rejectUnauthorized: false } : false,
+          host: cfg.host,
+          port: Number(cfg.port || 5432),
+          database: (cfg.database as string) || 'postgres',
+          user: cfg.user,
+          password: cfg.password,
+          ssl: { rejectUnauthorized: false }, // required by Supabase
         },
-        pool: { min: 2, max: 10 },
-        acquireConnectionTimeout: env.int('DATABASE_CONNECTION_TIMEOUT', 60000),
+        pool: { min: 0, max: 10 },
       },
     };
   }
