@@ -10,7 +10,7 @@
     "dev": "strapi develop",
     "develop": "strapi develop",
     "seed:example": "node ./scripts/seed.js",
-    "start": "strapi start",
+    "start": "node node_modules/@strapi/strapi/bin/strapi.js start",
     "start:render": "./render-start.sh",
     "strapi": "strapi",
     "upgrade": "npx @strapi/upgrade latest",
