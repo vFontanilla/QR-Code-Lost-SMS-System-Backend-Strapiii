@@ -1,20 +1,33 @@
+// config/middlewares.ts
 export default [
-  'strapi::logger',
   'strapi::errors',
-  'strapi::security',
+  {
+    name: 'strapi::security',
+    config: {
+      contentSecurityPolicy: {
+        useDefaults: true,
+        directives: { 'connect-src': ["'self'", 'https:', 'http:'] },
+      },
+    },
+  },
   {
     name: 'strapi::cors',
     config: {
+      enabled: true,
       origin: [
-        'http://localhost:3000',                  // Local Next.js dev
-        'https://qr-code-lost-sms-system.vercel.app/',       // Vercel production frontend
+        'http://localhost:3000',
+        'https://qr-code-lost-sms-system.vercel.app',
+        // allow previews; keep only if you use them:
+        /\.vercel\.app$/,
       ],
-      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
-      headers: '*', // Allow all headers (you can restrict if needed)
+      methods: ['GET','POST','PUT','PATCH','DELETE','HEAD','OPTIONS'],
+      headers: ['Content-Type','Authorization','Origin','Accept','X-Requested-With'],
       keepHeadersOnError: true,
+      // credentials: true, // uncomment ONLY if you send cookies
     },
   },
   'strapi::poweredBy',
+  'strapi::logger',
   'strapi::query',
   'strapi::body',
   'strapi::session',
